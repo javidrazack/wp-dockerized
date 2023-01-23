@@ -27,8 +27,7 @@ services:
       WAIT_FOR: db:3306
 
   db:
-    platform: linux/x86_64
-    image: mysql:5.7
+    image: mysql:8
     volumes:
       - ./mysql:/var/lib/mysql
     env_file: .env
