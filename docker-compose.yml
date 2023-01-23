@@ -1,0 +1,40 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports: 
+      - "80:80"
+    volumes:
+      - ./wordpress/:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+    restart: always
+    depends_on:
+      - wordpress 
+
+  wordpress:
+    image: wordpress:6.1.1-fpm-alpine
+    ports:
+        - '9000:9000'
+    volumes:
+        - ./wordpress:/var/www/html
+    env_file: .env
+    depends_on:
+        - db
+    restart: always
+    environment:
+      WAIT_FOR: db:3306
+
+  db:
+    platform: linux/x86_64
+    image: mysql:5.7
+    volumes:
+      - ./mysql:/var/lib/mysql
+    env_file: .env
+    expose: 
+     - "3306:3306"
+    restart: always
+  
+
+
